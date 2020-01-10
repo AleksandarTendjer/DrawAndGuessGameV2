@@ -33,7 +33,12 @@ body {
     grid-template-columns: 1fr 2fr 2fr;
     grid-template-rows: auto 4fr 1fr auto auto;
     grid-template-areas: "word word word""info drawing drawing""utils drawing drawing""msg msg msg""turns turns turns";
-    border-left: solid black;
+
+    border-radius: 6px;
+    border-left:solid 2px #999fff;
+    box-shadow: 0 0 6px #ccc;
+    padding: 10px;
+
     moz-box-flex:1.0; /* Firefox */
     -webkit-box-flex:1.0; /* Safari and Chrome */
     -ms-flex:1.0; /* Internet Explorer 10 */
@@ -42,9 +47,13 @@ body {
 
 .word {
     grid-area: word;
-    border-top: solid black;
-    border-right: solid black;
-    border-bottom: solid black;
+    border-radius: 6px;
+    border-top:solid 3px #999fff;
+    border-bottom:solid 3px #999fff;
+    border-right:solid 3px #999fff;
+
+    box-shadow: 0 0 6px #ccc;
+
     font: 400 32px 'Oleo Script', Helvetica, sans-serif;
     color: black;
     padding: 4px;
@@ -63,8 +72,11 @@ body {
 
 .drawing {
     grid-area: drawing;
-    border-left: solid black;
-    border-right: solid black;
+    border-radius: 6px;
+    border-left: solid 2px #999fff;
+    border-right: solid 2px #999fff;
+
+    box-shadow: 0 0 6px #ccc;
 }
 
 .canvas {
@@ -74,13 +86,17 @@ body {
 
 .msg {
     grid-area: msg;
-    border-top: solid black;
+    border-radius: 6px;
+    border-top: solid 2px #999fff;
+    border-right: solid 2px #999fff;
+
+    box-shadow: 0 0 6px #ccc;
     padding: 4px;
-    border-right: solid black;
+
 }
 
 #msgID {
-    border: 2px solid #ccc;
+    border: 2px solid  #999fff;
     border-radius: 4px;
     font-size: 16px;
     width: 99%;
@@ -92,14 +108,20 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    border-top: solid black;
-    border-right: solid black;
-    border-bottom: solid black;
+    border-radius: 6px;
+    border: solid 2px #999fff;
+
+    box-shadow: 0 0 6px #ccc;
+
 }
 
 .utils {
     grid-area: utils;
-    border-top: solid black;
+    border-radius: 6px;
+    border-top: solid 2px #999fff;
+    border-left: solid 2px #999fff;
+
+    box-shadow: 0 0 6px #ccc;
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 1fr 1fr;
