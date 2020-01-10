@@ -13,13 +13,31 @@ body {
     color: black;
     text-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2);
 }
+.all_elems{
+    width:1300px;
+    display:box;
+    /* Firefox */
+    display:-moz-box;
+    -moz-box-orient:horizontal;
+     /* Safari, Opera, and Chrome */
+    display:-webkit-box;
+    -webkit-box-orient:horizontal;
+    /* W3C */
+    display:box;
+    box-orient:horizontal;
+}
 
-.main {
+.all_elems .main {
+    box-flex:1.0;
     display: grid;
     grid-template-columns: 1fr 2fr 2fr;
     grid-template-rows: auto 4fr 1fr auto auto;
     grid-template-areas: "word word word""info drawing drawing""utils drawing drawing""msg msg msg""turns turns turns";
     border-left: solid black;
+    moz-box-flex:1.0; /* Firefox */
+    -webkit-box-flex:1.0; /* Safari and Chrome */
+    -ms-flex:1.0; /* Internet Explorer 10 */
+    box-flex:1.0;
 }
 
 .word {

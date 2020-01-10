@@ -38,7 +38,7 @@
     hideClass(document.getElementsByClassName("word"));
     hideClass(document.getElementsByClassName("info"));
     hideClass(document.getElementsByClassName("drawing"));
-
+    hideClass(document.getElementsByClassName("chat-section"));
     //have to create the login logic here(when loggedIn)
     let usernameID = document.getElementById('usernameID');
 
@@ -89,6 +89,8 @@ function loggedInFunction(data) {
               showClass(document.getElementsByClassName("word"));
               showClass(document.getElementsByClassName("info"));
               showClass(document.getElementsByClassName("drawing"));
+              showClass(document.getElementsByClassName("chat-section"));
+
 
           }
 

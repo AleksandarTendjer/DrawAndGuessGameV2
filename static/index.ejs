@@ -8,15 +8,18 @@
     <!-- https://www.freeiconspng.com/img/653 -->
     <link rel="icon" href="/static/gfx/gmd.png">
     <link rel="stylesheet"  href="/static/css/login.css">
+    <link rel="stylesheet"  href="/static/css/chat.css">
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-  	  <link rel='stylesheet' href='/stylesheets/style.css' />
+
 </head>
 
 <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <h1 id="title">Draw and Guess game</h1>
+    <div class="all_elems">
     <div class="main">
         <div class="word" id="wordID"></div>
         <div class="info" id="infoID"></div>
@@ -51,7 +54,72 @@
         </div>
     </div>
 
+</div>
+    <div class="chat-section">
+      <section id="chat">
+			<header class="chat_title section_title icon">Chat</header>
+			<div class="clear_chat icon" title="clear chat history"></div>
+			<article class="chat_content_wrap cf">
+				<div class="chat_content_inner">
+
+				<div class="chat_message type_me cf">
+					<img src="images/avator_1.jpg" />
+					<p class="info"><span class="author"></span><span class="time">13:01:45</span></p>
+					<p class="message"></p>
+				</div>
+				<div class="chat_message type_normal cf">
+					<img src="images/avator_1.jpg" />
+					<p class="info"><span class="author"></span><span class="time">13:01:45</span></p>
+					<p class="message"></p>
+				</div>
+				<div class="chat_message type_private cf">
+					<img src="images/avator_1.jpg" />
+					<p class="info"><span class="author"></span><span class="time">13:01:45</span></p>
+					<p class="message"></p>
+				</div>
+
+				<div class="chat_message notice type_right cf">
+					<i class="icon"></i>
+					<p></p>
+				</div>
+				<div class="chat_message notice type_sub cf">
+					<i class="icon"></i>
+					<p>""</p>
+				</div>
+				<div class="chat_message notice type_focus cf">
+					<i class="icon"></i>
+					<p></p>
+				</div>
+				<div class="chat_message notice type_add cf">
+					<i class="icon"></i>
+					<p></p>
+				</div>
+
+				<!-- .chat_content_inner -->
+				</div>
+			</article>
+
+			<!-- custom scroll bar -->
+			 <div class="scroller-container">
+                <div class="scrollbar"></div>
+            </div>
+
+			<footer class="chat_input cf">
+				<input type="text" class="message_input" id="message_input" placeholder="enter text message" />
+				<input type="button" class="chat_btn"  value="send" title="enter message">
+				<i class="show_online icon" title="view online people"></i>
+			</footer>
+		</section>
+
+		<section id="online">
+			<header class="online_title section_title icon">online users</header>
+			<section class="online_list">
+
+			</section>
+		</section>
     </div>
+  </div>
+
     <script src="/socket.io/socket.io.js"></script>
     <script src="/static/game.js"></script>
 </body>
