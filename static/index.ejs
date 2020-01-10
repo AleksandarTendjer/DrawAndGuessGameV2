@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Draw and Guess</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/styles.css">
+    <!-- https://www.freeiconspng.com/img/653 -->
+    <link rel="icon" href="/static/gfx/gmd.png">
+    <link rel="stylesheet"  href="/static/css/login.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  	  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <h1 id="title">Draw and Guess game</h1>
+    <div class="main">
+        <div class="word" id="wordID"></div>
+        <div class="info" id="infoID"></div>
+        <div class="drawing">
+            <canvas class="canvas" id="canvasDraw"></canvas>
+            <canvas class="canvas" id="canvasView"></canvas>
+        </div>
+        <div class="utils">
+            <div class="uc">
+                <button id="undoID">Undo</button>
+                <button id="clearID">Clear</button>
+            </div>
+            <div class="color">
+                <input type="color" id="colorID">
+            </div>
+            <div class="size">
+                <button id="smallID">Small</button>
+                <button id="mediumID">Medium</button>
+                <button id="largeID">Large</button>
+            </div>
+        </div>
+        <div class="msg">
+            <input id="msgID" type="text" maxlength="128" placeholder="What is your guess?">
+        </div>
+        <!--THIS WILL BE THE LOGIN, SIGNUP AREA -->
+      <!--  <div class="turns" id="turnsID">
+            <input id="usernameID" type="text" maxlength="8" placeholder="Please chose a username!">
+        </div> -->
+        <div class="turns"  id="turnsID">
+          <div class="login-section" id="login-sec">
+        <%- include ('login/loginForm.html') %>
+        </div>
+    </div>
+
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/static/game.js"></script>
+</body>
+
+</html>
