@@ -132,17 +132,19 @@ exports.delete = function(id, callback){
 }
 
 // add a score
-exports.saveScore = function(username, score, callback){
+exports.saveScore = function(username, score,guessCount callback){
 	exports.findByusername(username, function(error, user){
 		if(error){
 			callback(error);
 		}else{
 			user.modifydate = new Date();
 			user.score = score;
-      //add one more game
+      user.guessCount=guessCount;
+      //add one more game(three round)
       user.gamesCount=user.gameCount+1;
       user.markModified("score");
       user.markModified("gameCount");
+      user.markModified("guessCount");
 
       user.markModified("modifydate");
 			user.save(function(error){

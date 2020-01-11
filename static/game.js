@@ -168,6 +168,9 @@ e.preventDefault();
         for (let player of players) {
             let div = document.createElement('div');
             div.className = 'playerCard';
+            //id of the div
+            div.id='playerCard_'+player.id;
+
             if (player.id == drawingPlayer) {
                 div.id = 'drawingPlayerCard';
             }
@@ -178,6 +181,12 @@ e.preventDefault();
                 '</div>' +
                 '<div class="arrowRight"></div>';
             turns.appendChild(div);
+              //add event listener to this playerCard
+              playerProfileClick=document.getElementById('playerCard_'+player.id);
+              playerProfileClick.addEventListener('click', function onEvent(e) {
+                //send ajax call that opens a webpage with the player info
+                
+              });
         }
 
         //end card

@@ -276,15 +276,26 @@ function next_turn(lobby) {
             console.log("last player");
             console.log("***all players in the game***");
             console.log(lobby.players);
+            var wonCount;
             //save the data of the players current game in the database
             for(var j=0;j<lobby.players.length;j++)
             {
+              wonCount=0;
+              //getting the players that guessed correctly(won a round)
+              for (var k=0;k<guessedPlayers.length;k++)
+              {
+                //checking the socket.id-s
+                if(guessedPlayers[k]==lobby.players[j].id)
+                  wonCount++;
+
+              }
               console.log("***changing the players game status***");
-              dbo.saveScore(lobby.players[j].username,lobby.players[j].score);
+              dbo.saveScore(lobby.players[j].username,lobby.players[j].score,wonCount);
             }
 
             //send to frontend that the game is finished(add styles and scoreboard)
             io.in(lobbies[0].lobbyId).emit('gameFinished');
+
             return 1;
         //    lobby.drawingPlayer = lobby.players[0].id;
           //  console.log("***drawing player****");
