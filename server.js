@@ -113,7 +113,7 @@ io.on('connection', function(socket) {
             io.in(lobbies[0].lobbyId).emit('waiting');
         }
         else if(gameStarted==false){
-          lobbies[0].drawingPlayer = lobbies[0].players[0].id;//socket.id;
+          //lobbies[0].drawingPlayer = lobbies[0].players[0].id;//socket.id;
           console.log("becomming a drawer");
           console.log(lobbies[0].players[0].username);
           //emit ti the frontend that we are waitting for player to start the game
@@ -256,8 +256,8 @@ function next_turn(lobby) {
 
         if (i < lobby.players.length - 1) {
           //if we have 3 players, i is 1(1<3-1),
-          //not the last player
-            lobby.drawingPlayer = lobby.players[i].id;
+          //not the last player(let the next player be the drawer)
+            lobby.drawingPlayer = lobby.players[i+1].id;
             console.log("***drawing player****");
             console.log(lobby.drawingPlayer);
 
