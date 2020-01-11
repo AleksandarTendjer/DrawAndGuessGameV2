@@ -39,6 +39,11 @@
     hideClass(document.getElementsByClassName("info"));
     hideClass(document.getElementsByClassName("drawing"));
     hideClass(document.getElementsByClassName("chat-section"));
+    hideClass(document.getElementsByClassName("type_me"));
+    hideClass(document.getElementsByClassName("type_normal"));
+    hideClass(document.getElementsByClassName("type_private"));
+    hideClass(document.getElementsByClassName("type_right"));
+
     //have to create the login logic here(when loggedIn)
     let usernameID = document.getElementById('usernameID');
 
@@ -197,7 +202,13 @@ e.preventDefault();
             tick.play();
         }
     });
-    socket.on('public-message',function(){
+    socket.on('boradcastAnsweredWord',function(username,word){
+      //say who anwered the questions correctly
+      debugger;
+    var chat=document.getElementsByClassName('chat_content_inner')[0];
+    var html='<div class="chat_message type_normal cf"><p class="message"> '+username+' just guessed correctly the word '+word+'</p></div>';
+    var htmlObj=$(html);
+    chat.append(htmlObj[0]);
 
     });
     socket.on('waiting', function() {

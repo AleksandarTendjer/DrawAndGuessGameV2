@@ -132,13 +132,19 @@ exports.delete = function(id, callback){
 }
 
 // add a score
-exports.saveScore = function(id, score, callback){
-	exports.findUserById(id, function(error, user){
+exports.saveScore = function(username, score, callback){
+	exports.findByusername(username, function(error, user){
 		if(error){
 			callback(error);
 		}else{
 			user.modifydate = new Date();
 			user.score = score;
+      //add one more game
+      user.gamesCount=user.gameCount+1;
+      user.markModified("score");
+      user.markModified("gameCount");
+
+      user.markModified("modifydate");
 			user.save(function(error){
 				if(error){
 					console.log("FATAL " + error);

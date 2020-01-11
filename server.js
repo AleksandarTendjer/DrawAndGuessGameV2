@@ -182,6 +182,16 @@ io.on('connection', function(socket) {
         let currLobby = playerLobbies[socket.id];
         if (currLobby && socket.id != currLobby.drawingPlayer && word == currLobby.word && !currLobby.guessedPlayers.includes(socket.id)) {
             io.to(socket.id).emit('guessRes', "CORRECT!");
+            //find the player who answered correctly and broadcast that he answered
+            //correctly
+            for(var k=0;k<currLobby.players.length;k++)
+            {
+              if(socket.id==currLobby.players[k].id)
+              {
+                io.in(currLobby.lobbyId).emit('boradcastAnsweredWord',currLobby.players[k].username,word);
+              }
+            }
+
             let i = currLobby.players.map(function(e) { return e.id; }).indexOf(socket.id);
             currLobby.players[i].score += (60 - Math.ceil((Date.now() - startTime - currLobby.timer._idleStart) / 1000)) + 1;
             let j = currLobby.players.map(function(e) { return e.id; }).indexOf(currLobby.drawingPlayer);
@@ -264,7 +274,16 @@ function next_turn(lobby) {
         } else {
           //last player
             console.log("last player");
-            //send to frontend that the game is finished
+            console.log("***all players in the game***");
+            console.log(lobby.players);
+            //save the data of the players current game in the database
+            for(var j=0;j<lobby.players.length;j++)
+            {
+              console.log("***changing the players game status***");
+              dbo.saveScore(lobby.players[j].username,lobby.players[j].score);
+            }
+
+            //send to frontend that the game is finished(add styles and scoreboard)
             io.in(lobbies[0].lobbyId).emit('gameFinished');
             return 1;
         //    lobby.drawingPlayer = lobby.players[0].id;
