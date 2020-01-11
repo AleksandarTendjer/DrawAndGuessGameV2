@@ -59,7 +59,7 @@ function registrationFun(data)
   var password=data.password.value;
 
 //add user
-  $.post({
+  $.ajax({
       type: 'POST',
       url: 'http://localhost:3000/regster',
     //  contentType: "application/json",
@@ -162,14 +162,38 @@ e.preventDefault();
         nextTurn.play();
     });
 
+    function fillTheModal(data)
+    {
+      debugger;
+      //change the title
+      $("exampleModalLongTitle").innerHTML=data.username;
+      var html=' <span class="label label-primary">Games played:<div class="playerDataGamesPlayed">'+data.gameCount+' </div></span><br>';
+      var htmlObj=$(html);
+      //add the data here
+      $('#playerStatModalBody').append(htmlObj[0]);
+       html='  <span class="label label-info">Score:<div class="playerDataGamesPlayed">'+data.score+' </div></span><br>';
+       htmlObj=$(html);
+      //add the data here
+      $('#playerStatModalBody').append(htmlObj[0]);
+      html='  <span class="label label-success">wins:<div class="playerDataGamesPlayed"> '+data.guessCount+' </div></span><br>';
+      htmlObj=$(html);
+     //add the data here
+     $('#playerStatModalBody').append(htmlObj[0]);
+      //show the modal
+      $("#playerStatModal").modal('toggle'); //see here usage
+
+    }
     socket.on('updateSB', function(players, drawingPlayer) {
         let turns = document.getElementById('turnsID');
         turns.innerHTML = '';
+        var i=0;
         for (let player of players) {
             let div = document.createElement('div');
             div.className = 'playerCard';
+            // div.data-toggle="modal";
+            //div.data-target="#exampleModalCenter"
             //id of the div
-            div.id='playerCard_'+player.id;
+            //div.id='playerCard_'+player.id;
 
             if (player.id == drawingPlayer) {
                 div.id = 'drawingPlayerCard';
@@ -182,11 +206,30 @@ e.preventDefault();
                 '<div class="arrowRight"></div>';
             turns.appendChild(div);
               //add event listener to this playerCard
-              playerProfileClick=document.getElementById('playerCard_'+player.id);
-              playerProfileClick.addEventListener('click', function onEvent(e) {
+              var playerProfileClick=document.getElementsByClassName('playerCard');
+
+              playerProfileClick[i].addEventListener('click', function onEvent(e) {
                 //send ajax call that opens a webpage with the player info
-                
+                debugger;
+                $.ajax({
+                    type: 'POST',
+                    url: 'http://localhost:3000/userProfile/',
+                  //  contentType: "application/json",
+                data: {username:player.username},
+                success:function(data){
+                  //all stat
+                  debugger;
+                fillTheModal(data);
+
+              },
+              error: function()
+              {
+                alert("incorrect password");
+              }
+                    //JSON.stringify(Status),
               });
+            });
+            i++;
         }
 
         //end card

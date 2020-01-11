@@ -58,7 +58,8 @@ app.get('/', function(request, res) {
   //console.log(req.body);
 app.post("/login/",game.login);
 app.post('/register/',game.join);
-
+//app.post('/userProfile/',game.userProfile);
+app.post('/userProfile/',game.getStats);
 let lobbies = [];
 var gameStarted=false;
 let Lobby = function() {

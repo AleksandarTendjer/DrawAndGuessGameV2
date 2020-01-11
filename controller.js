@@ -65,6 +65,14 @@ exports.online = function(user, callback){
 	}
 }
 
+exports.getStats=function(req,res){
+  console.log("request body");
+  console.log(req.body);
+  var username=req.body.username;
+  db.findByusername(username, function(error, user){
+    res.send(user);
+});
+}
 // 注册
 exports.join = function(req, res, next){
 	var username = req.body.username;

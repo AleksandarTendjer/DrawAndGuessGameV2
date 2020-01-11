@@ -156,6 +156,7 @@ body {
     padding: 4px;
     vertical-align: middle;
     font-weight: bold;
+    cursor: pointer;
 }
 
 .playerCard {

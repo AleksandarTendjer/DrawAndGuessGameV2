@@ -130,9 +130,21 @@ exports.delete = function(id, callback){
 		}
 	});
 }
+exports.userProfile = function(username, callback){
+	exports.findByusername(username, function(error, user){
+	    if(error) {
+	        // console.log("FATAL " + error);
+	        callback("error", error);
+	    } else {
+	    	// console.log("id"+user);
+	    	callback(null, user);
+	    }
+	});
+}
+
 
 // add a score
-exports.saveScore = function(username, score,guessCount callback){
+exports.saveScore = function(username, score,guessCount, callback){
 	exports.findByusername(username, function(error, user){
 		if(error){
 			callback(error);
@@ -156,7 +168,7 @@ exports.saveScore = function(username, score,guessCount callback){
 				}
 			});
 		}
-	})
+	});
 }
 
 
