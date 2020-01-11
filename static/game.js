@@ -34,7 +34,7 @@
     document.getElementById("canvasView").style.display = "none";
     hideClass(document.getElementsByClassName("utils"));
     hideClass(document.getElementsByClassName("msg"));
-
+    showClass(document.getElementsByClassName("start-btn"));
     hideClass(document.getElementsByClassName("word"));
     hideClass(document.getElementsByClassName("info"));
     hideClass(document.getElementsByClassName("drawing"));
@@ -44,6 +44,7 @@
 
     var regisertForm= document.getElementById('registerForm');
     var loginForm= document.getElementById('loginForm');
+    var startBtn= document.getElementById('start-game-btn');
 
 
 
@@ -119,6 +120,12 @@ error: function()
 			//JSON.stringify(Status),
 });
 }
+//start game
+startBtn.addEventListener('click',function(e){
+e.preventDefault();
+  //socket.emit('view');
+  socket.emit('userStartedGame');
+});
 
 loginForm.addEventListener("submit",function(e){
 debugger;
@@ -190,13 +197,35 @@ e.preventDefault();
             tick.play();
         }
     });
+    socket.on('public-message',function(){
 
+    });
     socket.on('waiting', function() {
         infoElem = document.getElementById('infoID');
         infoElem.setAttribute('style', 'white-space: pre;');
         infoElem.textContent = "WAITING FOR\r\nADDITIONAL\r\nPLAYERS...";
     });
 
+    socket.on('waitingtoStart', function(leaderSocket) {
+      console.log('waiting to start');
+      console.log(socket.id);
+
+      if(socket.id==leaderSocket){
+        showClass(document.getElementsByClassName("start-btn"));
+    }else{
+        infoElem = document.getElementById('infoID');
+        infoElem.setAttribute('style', 'white-space: pre;');
+        infoElem.textContent = "WAITING FOR\r\nPLAYER TO\r\n START THE\r\nGAME\r\n";
+      }
+    });
+    socket.on('gameFinished',function(){
+      console.log("the game is finished");
+      var infoHeaderBig=document.getElementsByClassName('all_elems')[0];
+        infoHeaderBig.innerHTML='';
+        infoHeaderBig.innerHTML='<h1 align="center">The game has been finished.Want to have another one.<h1>';
+        infoHeaderBig.innerHTML='  <button type="submit" class="btn btn-primary btn-block">play another game</button>';
+
+    });
     socket.on('letsWatch', function(leaderSocket, dataURL) {
         if (socket.id != leaderSocket) {
             document.getElementById("canvasDraw").style.display = "none";

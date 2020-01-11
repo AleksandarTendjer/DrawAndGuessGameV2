@@ -60,7 +60,7 @@ app.post("/login/",game.login);
 app.post('/register/',game.join);
 
 let lobbies = [];
-
+var gameStarted=false;
 let Lobby = function() {
     let lobbyNum = lobbies.length;
     this.lobbyId = "lobby" + lobbyNum.toString();
@@ -75,24 +75,33 @@ let Lobby = function() {
 
 let playerLobbies = {};
 
+//with the socket.emit we communicate between the frontend and the backend
 
 // Add the WebSocket handlers
 io.on('connection', function(socket) {
     socket.on('newPlayer', function(username) {
+      var result;
+      //if there are no rooms, create one
         if (lobbies.length == 0) {
             lobbies.push(new Lobby());
-        } else if (lobbies[0].players.length == 6) {
+        } else if (lobbies[0].players.length == 8) {
+            //if there are 8 players remove room
             lobbies.splice(0, 0, new Lobby());
         }
+        //join the room
         socket.join(lobbies[0].lobbyId);
-
+        //add a player to the room and add a sound on entrance
         console.log(username + " connected!");
         lobbies[0].players.push({ id: socket.id, username: username, score: 0 });
         io.in(lobbies[0].lobbyId).emit('joinSound');
         playerLobbies[socket.id] = lobbies[0];
+        //if there are less then 3 players in the room, add forplay
+        if (lobbies[0].players.length <3 ) {
+            lobbies[0].drawingPlayer = lobbies[0].players[0].id;//socket.id;
+            console.log("becomming a drawer");
+            console.log(lobbies[0].players[0].username);
 
-        if (lobbies[0].players.length == 1) {
-            lobbies[0].drawingPlayer = socket.id;
+            //find a ranom word form the list
             let rnd = Math.floor(Math.random() * totalWords);
             collection.findOne({ _id: rnd }, (err, res) => {
                 if (err) return console.error(err);
@@ -100,15 +109,64 @@ io.on('connection', function(socket) {
                 lobbies[0].word = res.word;
                 lobbies[0].guessedPlayers = [];
             });
+            //emit to frontend that we are waiting for players
             io.in(lobbies[0].lobbyId).emit('waiting');
-        } else {
-            if (lobbies[0].players.length == 2) {
-                next_turn(lobbies[0]);
+        }
+        else if(gameStarted==false){
+          lobbies[0].drawingPlayer = lobbies[0].players[0].id;//socket.id;
+          console.log("becomming a drawer");
+          console.log(lobbies[0].players[0].username);
+          //emit ti the frontend that we are waitting for player to start the game
+          io.in(lobbies[0].lobbyId).emit('waitingToStart',lobbies[0].players[0].id);
+          //gameStarted=true;
+        }
+        io.in(lobbies[0].lobbyId).emit('updateSB', lobbies[0].players, lobbies[0].players[0].id);
+
+        //not good(have to set game started socket on method)
+
+         /*else {
+
+          //if the player count is more than 3, start the game
+            if (lobbies[0].players.length >= 3) {
+              //setting the drawer
+                 result=next_turn(lobbies[0]);
+                console.log("result of the next turn");
+                console.log(result);
             }
-            io.in(lobbies[0].lobbyId).emit('letsWatch', lobbies[0].drawingPlayer, lobbies[0].lastDataUrl);
-            io.to(socket.id).emit('makeaguess', lobbies[0].drawingPlayer);
+
+            if(result==1)
+            {
+              //if result is 1(the game finish code-exit the game)
+              return 0;
+            }
+              //setting ither players to watch when a player is made a drawer
+              io.in(lobbies[0].lobbyId).emit('letsWatch', lobbies[0].drawingPlayer, lobbies[0].lastDataUrl);
+              io.to(socket.id).emit('makeaguess', lobbies[0].drawingPlayer);
         }
         io.in(lobbies[0].lobbyId).emit('updateSB', lobbies[0].players, lobbies[0].drawingPlayer);
+    */});
+    socket.on('userStartedGame',function(){
+      console.log("user has started the game");
+      gameStarted==true;
+        //game is started and player count is > than 3
+        //if the player count is more than 3, start the game
+          if (lobbies[0].players.length >= 3) {
+            //setting the drawer
+               result=next_turn(lobbies[0]);
+              console.log("result of the next turn");
+              console.log(result);
+          }
+
+          if(result==1)
+          {
+            //if result is 1(the game finish code-exit the game)
+            return 0;
+          }
+            //setting ither players to watch when a player is made a drawer
+            io.in(lobbies[0].lobbyId).emit('letsWatch', lobbies[0].drawingPlayer, lobbies[0].lastDataUrl);
+            io.to(socket.id).emit('makeaguess', lobbies[0].drawingPlayer);
+
+      io.in(lobbies[0].lobbyId).emit('updateSB', lobbies[0].players, lobbies[0].drawingPlayer);
     });
 
     socket.on('view', function(dataURL) {
@@ -120,6 +178,7 @@ io.on('connection', function(socket) {
     });
 
     socket.on('guess', function(word) {
+      //add logic to save points to user
         let currLobby = playerLobbies[socket.id];
         if (currLobby && socket.id != currLobby.drawingPlayer && word == currLobby.word && !currLobby.guessedPlayers.includes(socket.id)) {
             io.to(socket.id).emit('guessRes', "CORRECT!");
@@ -187,14 +246,32 @@ io.on('connection', function(socket) {
 });
 
 function next_turn(lobby) {
+  //set an interval for the round and add function to it
     lobby.timer = setInterval(function() {
+      //map players in lobby
         let i = lobby.players.map(function(e) { return e.id; }).indexOf(lobby.drawingPlayer);
         lobby.lastDataUrl = null;
+        console.log("***player map(current position)***");
+        console.log(i);
+
         if (i < lobby.players.length - 1) {
-            lobby.drawingPlayer = lobby.players[i + 1].id;
+          //if we have 3 players, i is 1(1<3-1),
+          //not the last player
+            lobby.drawingPlayer = lobby.players[i].id;
+            console.log("***drawing player****");
+            console.log(lobby.drawingPlayer);
+
         } else {
-            lobby.drawingPlayer = lobby.players[0].id;
+          //last player
+            console.log("last player");
+            //send to frontend that the game is finished
+            io.in(lobbies[0].lobbyId).emit('gameFinished');
+            return 1;
+        //    lobby.drawingPlayer = lobby.players[0].id;
+          //  console.log("***drawing player****");
+          //  console.log(lobby.drawingPlayer);
         }
+        //find random word
         let rnd = Math.floor(Math.random() * totalWords);
         collection.findOne({ _id: rnd }, (err, res) => {
             if (err) return console.error(err);
@@ -202,14 +279,17 @@ function next_turn(lobby) {
             lobby.word = res.word;
             lobby.guessedPlayers = [];
         });
+        //player who has drawen now watches
         io.in(lobby.lobbyId).emit('letsWatch', lobby.drawingPlayer, lobby.lastDataUrl);
         io.in(lobby.lobbyId).emit('makeaguess', lobby.drawingPlayer);
         io.in(lobby.lobbyId).emit('updateSB', lobby.players, lobby.drawingPlayer);
         io.in(lobby.lobbyId).emit('nextTurn');
     }, 60000);
 
+
     lobby.timeLeft = setInterval(function() {
         let timeleft = (60 - Math.ceil((Date.now() - startTime - lobby.timer._idleStart) / 1000));
         io.in(lobby.lobbyId).emit('timer', timeleft.toString());
     }, 1000);
+    return 0;
 }
