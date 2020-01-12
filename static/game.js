@@ -166,19 +166,29 @@ e.preventDefault();
     {
       debugger;
       //change the title
-      $("exampleModalLongTitle").innerHTML=data.username;
-      var html=' <span class="label label-primary">Games played:<div class="playerDataGamesPlayed">'+data.gameCount+' </div></span><br>';
-      var htmlObj=$(html);
-      //add the data here
+      //$("#exampleModalLongTitle").val=data.username;
+document.getElementById("exampleModalLongTitle").innerHTML=data.username;
+document.getElementById("gamesPlayed").innerHTML="Games Played: "+data.gameCount;
+document.getElementById("gamesGuessed").innerHTML="Game Count: "+data.gameCount;
+document.getElementById("generalScore").innerHTML="General score: "+data.score;
+
+/*      $("#gamesPlayed").val="Games played:"+data.gameCount;
+      $("#gamesGuessed").val="Games guessed:"+data.gamesGuessed;
+      $("#generalScore").val="General score:"+data.score; */
+      //document.getElementById("exampleModalLongTitle").innerHTML=data.username
+
+
+
+  /*    //add the data here
       $('#playerStatModalBody').append(htmlObj[0]);
-       html='  <span class="label label-info">Score:<div class="playerDataGamesPlayed">'+data.score+' </div></span><br>';
+       html='  <span class="label label-info">Score:'+data.score+' </div></span><br>';
        htmlObj=$(html);
       //add the data here
       $('#playerStatModalBody').append(htmlObj[0]);
       html='  <span class="label label-success">wins:<div class="playerDataGamesPlayed"> '+data.guessCount+' </div></span><br>';
       htmlObj=$(html);
      //add the data here
-     $('#playerStatModalBody').append(htmlObj[0]);
+     $('#playerStatModalBody').append(htmlObj[0]); */
       //show the modal
       $("#playerStatModal").modal('toggle'); //see here usage
 

@@ -146,6 +146,27 @@ body {
 #colorID {
     width: 128px;
 }
+.card-img-top{
+  border-radius:50%;
+  border:solid 2px #999fff;
+
+}
+.modal-content {
+    background-color: #87CEFA;
+    font-family: 'Montserrat', sans-serif;
+    height: 100%;
+}
+.modal-title {
+    text-align: center;
+    margin-top: 10px;
+    padding-top: 10px;
+}
+.player-card {
+    width: 50%;
+    border-bottom-width: 5px;
+    border-color: black;
+    font-weight: bold;
+}
 
 .scoreBoard {
     display: inline-block;
