@@ -79,6 +79,8 @@ exports.join = function(req, res, next){
 	var password = req.body.password;
 //	var avatorId = //req.body.avatorId;
 //=mongoose.Types.ObjectId();
+console.log("the user to register is:");
+console.log(req.body);
 
 	var data = {
 		username: username,
@@ -90,6 +92,7 @@ exports.join = function(req, res, next){
 				type: "same name"
 			});
 		}else{
+      console.log("added a user");
 			res.send(data);
 		}
 	});

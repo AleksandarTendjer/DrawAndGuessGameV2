@@ -19,6 +19,13 @@
     let msgID = document.getElementById('msgID');
     msgID.addEventListener('keyup', function onEvent(e) {
         if (e.keyCode === 13) {
+          if(msgID.value[0]=="@")
+          {
+            if((msgID.value[1]=="e")&&(msgID.value[2]=="v")&&(msgID.value[3]=="e")&&(msgID.value[4]=="r")&&(msgID.value[5]=="y")&&(msgID.value[6]=="o")&&(msgID.value[7]=="n")&&(msgID.value[8]=="e"))
+            {
+              socket.emit("publicMessage", msgID.value.toLowerCase(),socket.id);
+            }
+          }
             if (msgID.value.match(alphanumeric)) {
                 msgID.placeholder = "What is your guess?";
 
@@ -44,25 +51,29 @@
     hideClass(document.getElementsByClassName("type_normal"));
     hideClass(document.getElementsByClassName("type_private"));
     hideClass(document.getElementsByClassName("type_right"));
-
+    hideClass(document.getElementsByClassName('btn-start-Another'));
+    hideClass(document.getElementsByClassName(' registration-login'));
     //have to create the login logic here(when loggedIn)
     let usernameID = document.getElementById('usernameID');
+    let startAnotherBtn=document.getElementById('start-game-btn');
 
     var regisertForm= document.getElementById('registerForm');
     var loginForm= document.getElementById('loginForm');
     var startBtn= document.getElementById('start-game-btn');
+    var switchToRegister=document.getElementById('createAccount');
+    var switchToLogin=document.getElementById('switchToLogin');
 
 
-
-function registrationFun(data)
+function registrationFun(username,password)
 {
-  var username=data.username.value;
-  var password=data.password.value;
+  debugger;
+//  var username=username;
+  //var password=password;
 
 //add user
   $.ajax({
       type: 'POST',
-      url: 'http://localhost:3000/regster',
+      url: 'http://localhost:3000/register/',
     //  contentType: "application/json",
   data: {username:username,password:password},//JSON.stringify(Status),
     //dataType: "json",
@@ -127,6 +138,16 @@ error: function()
 });
 }
 //start game
+switchToRegister.addEventListener('click',function(e){
+  debugger;
+  hideClass(document.getElementsByClassName("login-login"));
+  showClass(document.getElementsByClassName("registration-login"));
+});
+switchToLogin.addEventListener('click',function(e){
+  debugger;
+  showClass(document.getElementsByClassName("login-login"));
+  hideClass(document.getElementsByClassName("registration-login"));
+});
 startBtn.addEventListener('click',function(e){
 e.preventDefault();
 if(userCount>=3)
@@ -138,6 +159,33 @@ if(userCount>=3)
 }
 });
 
+startAnotherBtn.addEventListener('click',function(e){
+e.preventDefault();
+if(userCount>=3)
+{
+
+                document.getElementsByClassName("login-section")[0].style.display = "none";
+                showClass(document.getElementsByClassName("utils"));
+                //this is where we emit the new player
+                hideClass(document.getElementsByClassName("start-btn"));
+                socket.emit('newPlayer',data.username/* usernameID.value*/);
+                showClass(document.getElementsByClassName("word"));
+                showClass(document.getElementsByClassName("info"));
+                showClass(document.getElementsByClassName("drawing"));
+                showClass(document.getElementsByClassName("chat-section"));
+
+  //socket.emit('view');
+//  socket.emit('userStartedGame');
+}else {
+  alert("Not enough players to start. Must be more than 2 players to start the game.");
+}
+});
+regisertForm.addEventListener("submit",function(e){
+
+
+e.preventDefault();
+  registrationFun(this.email.value,this.password.value)
+});
 loginForm.addEventListener("submit",function(e){
 debugger;
 e.preventDefault();
@@ -146,6 +194,7 @@ e.preventDefault();
 
     function hideClass(cls) {
         for (let elem of cls) {
+          debugger;
             elem.style.display = "none";
         }
     }
@@ -169,6 +218,13 @@ e.preventDefault();
     socket.on('nextTurn', function() {
         nextTurn.play();
     });
+    socket.on('incommingMessage',function(message,username){
+      var chat=document.getElementsByClassName('chat_content_inner')[0];
+      var currTime=new Date(Date.now()).toLocaleString();
+      var html='<div class="chat_message type_normal cf"><p class="message"> '+username+" worte: "+message+" at "+currTime+'</p></div>';
+      var htmlObj=$(html);
+      chat.append(htmlObj[0]);
+  });
 
     function fillTheModal(data)
     {
@@ -320,7 +376,8 @@ document.getElementById("generalScore").innerHTML="General score: "+data.score;
       var infoHeaderBig=document.getElementsByClassName('all_elems')[0];
         infoHeaderBig.innerHTML='';
         infoHeaderBig.innerHTML='<h1 align="center">The game has been finished.Want to have another one.<h1>';
-        infoHeaderBig.innerHTML='  <button type="submit" class="btn btn-primary btn-block">play another game</button>';
+        //infoHeaderBig.innerHTML='  <button type="submit" class="btn btn-primary btn-block">play another game</button>';
+        showClass(document.getElementsByClassName('btn-start-Another'));
 
     });
     socket.on('letsWatch', function(leaderSocket, dataURL) {

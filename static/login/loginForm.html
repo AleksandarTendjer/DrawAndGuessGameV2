@@ -1,4 +1,4 @@
-<form method="POST" id="loginForm" class="my-login-validation" novalidate=""  <!--onsubmit="debugger;event.preventDefault();loginFun(this.email.value,this.password.value);"-->>
+<form method="POST" id="loginForm" class="my-login-validation login-login" novalidate=""  <!--onsubmit="debugger;event.preventDefault();loginFun(this.email.value,this.password.value);"-->>
   <div class="form-group">
     <!--ON THE BACKEND WE WILL ONLY USE USERNAME  -->
     <label for="email">E-Mail Address or username</label>
@@ -33,6 +33,6 @@
     </button>
   </div>
   <div class="mt-4 text-center">
-    Don't have an account? <a onclick='debugger; $("#login-sec").innerHTML="";	$("#login-sec").load("/static/login/registerForm.html");'>Create One</a>
+    Don't have an account? <a id="createAccount" >Create One</a>
   </div>
 </form>

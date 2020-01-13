@@ -1,4 +1,4 @@
-<form method="POST" class="my-login-validation" id="registerForm" novalidate="" onsubmit="event.preventDefault();debugger;registrationFun(this);">
+<form method="POST" class="my-login-validation registration-login" id="registerForm" novalidate="" >
 								<div class="form-group">
 									<label for="name">Name</label>
 									<input id="name" type="text" class="form-control" name="username" required autofocus>
@@ -39,6 +39,6 @@
 									</button>
 								</div>
 								<div class="mt-4 text-center">
-									Already have an account? <a onclick='debugger;  $("#login-sec").innerHTML="";	$("#login-sec").load("/static/login/loginForm.html");'>Login</a>
+									Already have an account? <a  id="switchToLogin">Login</a>
 								</div>
 							</form>

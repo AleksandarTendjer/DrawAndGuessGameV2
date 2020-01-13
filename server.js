@@ -167,6 +167,19 @@ io.on('connection', function(socket) {
         }
         io.in(lobbies[0].lobbyId).emit('updateSB', lobbies[0].players, lobbies[0].drawingPlayer);
     */});
+    socket.on('publicMessage',function(message,id){
+      //  var player=lobbies[0].players[socket.id];
+        for(var k=0;k<lobbies[0].players.length;k++)
+        {
+          if(socket.id==lobbies[0].players[k].id)
+          {
+            console.log(lobbies[0].players[k]);
+
+            io.in(lobbies[0].lobbyId).emit('incommingMessage', message,lobbies[0].players[k].username);
+          }
+        }
+
+    });
     socket.on('userStartedGame',function(){
       console.log("user has started the game");
       gameStarted==true;
@@ -210,7 +223,10 @@ io.on('connection', function(socket) {
             {
               if(socket.id==currLobby.players[k].id)
               {
+
                 io.in(currLobby.lobbyId).emit('boradcastAnsweredWord',currLobby.players[k].username,word);
+
+
               }
             }
 
@@ -342,6 +358,12 @@ function next_turn(lobby) {
     lobby.timeLeft = setInterval(function() {
 
         let timeleft = (180 - Math.ceil((Date.now() - startTime - lobby.timer._idleStart) / 1000));
+        io.in(lobby.lobbyId).emit('timer', timeleft.toString());
+    }, 1000);
+    return 0;
+    lobby.timeLeftAfterAnswer = setInterval(function() {
+
+        let timeleft = (10 - Math.ceil((Date.now() - startTime - lobby.timer._idleStart) / 1000));
         io.in(lobby.lobbyId).emit('timer', timeleft.toString());
     }, 1000);
     return 0;
