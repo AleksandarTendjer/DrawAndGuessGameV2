@@ -232,7 +232,7 @@ io.on('connection', function(socket) {
                     io.in(currLobby.lobbyId).emit('letsWatch', currLobby.drawingPlayer, currLobby.lastDataUrl);
                     io.in(currLobby.lobbyId).emit('makeaguess', currLobby.drawingPlayer);
                     next_turn(currLobby);
-                    io.in(currLobby.lobbyId).emit('timer', "60");
+                    io.in(currLobby.lobbyId).emit('timer', "180");
                 } else {
                     io.in(currLobby.lobbyId).emit('waiting');
                     let j = lobbies.map(function(e) { return e.lobbyId; }).indexOf(currLobby.lobbyId);
@@ -283,10 +283,10 @@ function next_turn(lobby) {
             {
               wonCount=0;
               //getting the players that guessed correctly(won a round)
-              for (var k=0;k<guessedPlayers.length;k++)
+              for (var k=0;k<lobby.guessedPlayers.length;k++)
               {
                 //checking the socket.id-s
-                if(guessedPlayers[k]==lobby.players[j].id)
+                if(lobby.guessedPlayers.guessedPlayers[k]==lobby.players[j].id)
                   wonCount++;
 
               }
@@ -317,9 +317,10 @@ function next_turn(lobby) {
         io.in(lobby.lobbyId).emit('nextTurn');
     }, 60000);
 
-
+    //setting the timer
     lobby.timeLeft = setInterval(function() {
-        let timeleft = (60 - Math.ceil((Date.now() - startTime - lobby.timer._idleStart) / 1000));
+      
+        let timeleft = (180 - Math.ceil((Date.now() - startTime - lobby.timer._idleStart) / 1000));
         io.in(lobby.lobbyId).emit('timer', timeleft.toString());
     }, 1000);
     return 0;

@@ -149,11 +149,18 @@ exports.saveScore = function(username, score,guessCount, callback){
 		if(error){
 			callback(error);
 		}else{
+      console.log("modifying the database with these values ");
 			user.modifydate = new Date();
 			user.score = score;
       user.guessCount=guessCount;
       //add one more game(three round)
-      user.gamesCount=user.gameCount+1;
+      user.gamesCount+=1;
+      console.log("score");
+      console.log(score);
+      console.log("guess count");
+      console.log(guessCount);
+      console.log("games played");
+      console.log(user.gamesCount);
       user.markModified("score");
       user.markModified("gameCount");
       user.markModified("guessCount");

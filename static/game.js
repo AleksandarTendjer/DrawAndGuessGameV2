@@ -253,10 +253,15 @@ document.getElementById("generalScore").innerHTML="General score: "+data.score;
         let wordElem = document.getElementById('wordID');
         wordElem.textContent = res;
         if (res == "CORRECT!")
+        {
+          //set timer to 10 secconds
             correct.play();
+        }
     });
 
     socket.on('timer', function(timeleft) {
+      debugger;
+      console.log(timeleft);
         infoElem = document.getElementById('infoID');
         infoElem.setAttribute('style', 'white-space: pre;');
         infoElem.textContent = timeleft + "\r\nSECONDS\r\nREMAINING!";
