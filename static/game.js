@@ -14,7 +14,8 @@
     let nextTurn = new Audio('static/sfx/nextTurn.mp3');
 
     let alphanumeric = /^[0-9a-zA-Z]+$/;
-
+    let userCount=0;
+    let mainSock=0;
     let msgID = document.getElementById('msgID');
     msgID.addEventListener('keyup', function onEvent(e) {
         if (e.keyCode === 13) {
@@ -34,7 +35,7 @@
     document.getElementById("canvasView").style.display = "none";
     hideClass(document.getElementsByClassName("utils"));
     hideClass(document.getElementsByClassName("msg"));
-    showClass(document.getElementsByClassName("start-btn"));
+    hideClass(document.getElementsByClassName("start-btn"));
     hideClass(document.getElementsByClassName("word"));
     hideClass(document.getElementsByClassName("info"));
     hideClass(document.getElementsByClassName("drawing"));
@@ -90,7 +91,7 @@ function loggedInFunction(data) {
               document.getElementsByClassName("login-section")[0].style.display = "none";
               showClass(document.getElementsByClassName("utils"));
               //this is where we emit the new player
-
+              hideClass(document.getElementsByClassName("start-btn"));
               socket.emit('newPlayer',data.username/* usernameID.value*/);
               showClass(document.getElementsByClassName("word"));
               showClass(document.getElementsByClassName("info"));
@@ -128,8 +129,13 @@ error: function()
 //start game
 startBtn.addEventListener('click',function(e){
 e.preventDefault();
+if(userCount>=3)
+{
   //socket.emit('view');
   socket.emit('userStartedGame');
+}else {
+  alert("Not enough players to start. Must be more than 2 players to start the game.");
+}
 });
 
 loginForm.addEventListener("submit",function(e){
@@ -151,10 +157,12 @@ e.preventDefault();
     }
 
     socket.on('joinSound', function() {
+      userCount+=1;
         joinSound.play();
     });
 
     socket.on('disconnectSound', function() {
+        userCount-=1;
         disconnectSound.play();
     });
 
@@ -279,18 +287,29 @@ document.getElementById("generalScore").innerHTML="General score: "+data.score;
 
     });
     socket.on('waiting', function() {
+
         infoElem = document.getElementById('infoID');
         infoElem.setAttribute('style', 'white-space: pre;');
         infoElem.textContent = "WAITING FOR\r\nADDITIONAL\r\nPLAYERS...";
     });
+    socket.on('firstPlayer',function(sockId){
+      mainSock=sockId;
 
-    socket.on('waitingtoStart', function(leaderSocket) {
-      console.log('waiting to start');
-      console.log(socket.id);
+    });
+    socket.on('waitingToStart', function(socketid) {
+  //    console.log('waiting to start');
+    //  console.log(socket.id);
 
-      if(socket.id==leaderSocket){
+      debugger;
+      if(mainSock===socket.id){ //socket.id==leaderSocket){
+        mainSock=socket.id;
         showClass(document.getElementsByClassName("start-btn"));
+        //infoElem = document.getElementById('infoID');
+        //infoElem.setAttribute('style', 'white-space: pre;');
+        //infoElem.textContent = "YOUR SOCKET"+socket.id+"LEADER SOCKET"+leaderSocket;
+        //showClass(document.getElementsByClassName("start-btn"));
     }else{
+      hideClass(document.getElementsByClassName("start-btn"));
         infoElem = document.getElementById('infoID');
         infoElem.setAttribute('style', 'white-space: pre;');
         infoElem.textContent = "WAITING FOR\r\nPLAYER TO\r\n START THE\r\nGAME\r\n";

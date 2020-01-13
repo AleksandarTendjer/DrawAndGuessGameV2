@@ -111,15 +111,36 @@ io.on('connection', function(socket) {
                 lobbies[0].guessedPlayers = [];
             });
             //emit to frontend that we are waiting for players
-            io.in(lobbies[0].lobbyId).emit('waiting');
+          //  io.in(lobbies[0].lobbyId).emit('waiting');
+    //      if(lobbies[0].players.length==1)
+      //    {
+        //    io.in(lobbies[0].lobbyId).emit('waitingToStart',lobbies[0].players[0].id);
+          //}else {
+            //for all other players
+            //io.in(lobbies[0].lobbyId).emit('waiting');
+            console.log("waittin to start, this player is going to start the game ");
+            console.log(lobbies[0].players[0].id);
+            console.log("current socket id ");
+            console.log(socket.id);
+            if(lobbies[0].players.length==1)
+                  {
+                    io.in(lobbies[0].lobbyId).emit('firstPlayer',lobbies[0].players[0].id);
+                    //io.in(lobbies[0].lobbyId).emit('waitingToStart',lobbies[0].players[0].id);
+                  }
+
+              io.in(lobbies[0].lobbyId).emit('waitingToStart',socket.id);
+
+          //}
         }
         else if(gameStarted==false){
           //lobbies[0].drawingPlayer = lobbies[0].players[0].id;//socket.id;
-          console.log("becomming a drawer");
-          console.log(lobbies[0].players[0].username);
+          //console.log("player that starts the game is: ");
+          //console.log(lobbies[0].players[0].username);
           //emit ti the frontend that we are waitting for player to start the game
-          io.in(lobbies[0].lobbyId).emit('waitingToStart',lobbies[0].players[0].id);
+        //  io.in(lobbies[0].lobbyId).emit('waitingToStart',lobbies[0].players[0].id);
           //gameStarted=true;
+        //  io.in(lobbies[0].lobbyId).emit('waitingToStart',lobbies[0].players[0].id);
+        io.in(lobbies[0].lobbyId).emit('waitingToStart',lobbies[0].players[0].id);
         }
         io.in(lobbies[0].lobbyId).emit('updateSB', lobbies[0].players, lobbies[0].players[0].id);
 
@@ -319,7 +340,7 @@ function next_turn(lobby) {
 
     //setting the timer
     lobby.timeLeft = setInterval(function() {
-      
+
         let timeleft = (180 - Math.ceil((Date.now() - startTime - lobby.timer._idleStart) / 1000));
         io.in(lobby.lobbyId).emit('timer', timeleft.toString());
     }, 1000);
