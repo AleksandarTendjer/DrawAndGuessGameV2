@@ -15,7 +15,7 @@ const io = socketIO(server);
 const port = process.env.PORT || 3000;
 var dbo=require('./dbOperations');
 var game = require("./controller");
-
+var threeMinTimeout=0;
 var bodyParser = require('body-parser');
 
 const MongoClient = require('mongodb').MongoClient;
@@ -256,7 +256,9 @@ io.on('connection', function(socket) {
             currLobby.lastDataUrl = null;
             if (currLobby.players.length > 0) {
                 clearInterval(currLobby.timer);
+
                 clearInterval(currLobby.timeLeft);
+                threeMinTimeout=0;
                 if (i < currLobby.players.length)
                     currLobby.drawingPlayer = currLobby.players[i].id;
                 else
@@ -289,6 +291,7 @@ io.on('connection', function(socket) {
         if (currLobby.players.length < 2) {
             clearInterval(currLobby.timer);
             clearInterval(currLobby.timeLeft);
+            threeMinTimeout=0;
             io.in(currLobby.lobbyId).emit('waiting');
         }
 
@@ -367,12 +370,38 @@ function next_turn(lobby) {
         io.in(lobby.lobbyId).emit('makeaguess', lobby.drawingPlayer);
         io.in(lobby.lobbyId).emit('updateSB', lobby.players, lobby.drawingPlayer);
         io.in(lobby.lobbyId).emit('nextTurn');
-    }, 60000);
+    }, 180000);
 
     //setting the timer
     lobby.timeLeft = setInterval(function() {
+      //get secconds
+      if(threeMinTimeout==0)
+      {
+        threeMinTimeout+=Math.ceil(Date.now());
+      }else {
+        var change=(Math.ceil(Date.now()))-threeMinTimeout;
+        console.log("three min timeout before the sh");
+        console.log(threeMinTimeout);
+        threeMinTimeout+=Math.ceil(change)/1000;
 
-        let timeleft = (180 - Math.ceil((Date.now() - startTime - lobby.timer._idleStart) / 1000));
+      }
+        console.log("three min timeout");
+        console.log(threeMinTimeout);
+
+
+        console.log("time now");//threeMinTimeout) / 1000 ));//startTime - lobby.timer._idleStart) / 1000));
+        let timeleft = (180 - Math.ceil((Date.now() -startTime - lobby.timer._idleStart) / 1000));
+        console.log("time now");
+        console.log(Date.now());
+        console.log("start time");
+        console.log(startTime/1000);
+        console.log("Idle start");
+        console.log(lobby.timer._idleStart/1000);
+        console.log("Skupaj");
+        console.log(Math.ceil((Date.now() - startTime - lobby.timer._idleStart) / 1000));
+        console.log("Skupaj2");
+        console.log(Math.ceil((Date.now() - threeMinTimeout) / 1000));
+
         io.in(lobby.lobbyId).emit('timer', timeleft.toString());
     }, 1000);
     return 0;
