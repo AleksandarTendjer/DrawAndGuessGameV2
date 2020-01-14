@@ -6,18 +6,18 @@ Cntroller for all the database logic
 
 var db = require("./dbOperations");
 var mongoose=require("mongoose");
-// 显示所有玩家
+// all players
 exports.allgamers = function(req, res, next){
 	db.allGamers(function(error, gamers){
 		if(error){
 			return next(error);
 		}
-		// 显示所有玩家
+		//was an idea
 		// res.render("allgamers.html", {gamer: gamer});
 	});
 }
 
-// 注册玩家
+// new player
 exports.new = function(req, res, next){
 	var username = req.body.username || "";
 	var password = req.body.password || "";
@@ -40,7 +40,7 @@ exports.view = function(req, res, next){
 	res.redirect("/");
 }
 
-// 获取头像id
+// get player id
 exports.getAvatorId = function(req, res, next){
 	var nickname = req.body.nickname;
 	db.getAvatorId(nickname, function(error, id){
@@ -54,7 +54,7 @@ exports.getAvatorId = function(req, res, next){
 	});
 }
 
-// 在线人数
+// online users list
 exports.online = function(user, callback){
 	var onlineList = [];
 	for(var i=0; i<user.length; i++){
@@ -64,7 +64,7 @@ exports.online = function(user, callback){
 		});
 	}
 }
-
+//get status of the  player
 exports.getStats=function(req,res){
   console.log("request body");
   console.log(req.body);
@@ -73,7 +73,7 @@ exports.getStats=function(req,res){
     res.send(user);
 });
 }
-// 注册
+// register
 exports.join = function(req, res, next){
 	var username = req.body.username;
 	var password = req.body.password;
@@ -99,15 +99,13 @@ console.log(req.body);
 }
 
 
-// 登陆
+// login
 exports.login = function(req, res, next){
   console.log("****body****");
   console.log(req.body);
 	var username = req.body.username;
 	var password = req.body.password;
-	//var avatorId =req.body.avatorId;
-	//res.cookie("nickname", nickname);
-	//res.cookie("avatorId", avatorId);
+
 
 	var data = {
 		username: username,

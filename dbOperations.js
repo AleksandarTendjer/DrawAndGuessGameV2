@@ -151,8 +151,8 @@ exports.saveScore = function(username, score,guessCount, callback){
 		}else{
       console.log("modifying the database with these values ");
 			user.modifydate = new Date();
-			user.score = score;
-      user.guessCount=guessCount;
+			user.score += score;
+      user.guessCount+=guessCount;
       //add one more game(three round)
       user.gamesCount+=1;
       console.log("score");
@@ -162,16 +162,18 @@ exports.saveScore = function(username, score,guessCount, callback){
       console.log("games played");
       console.log(user.gamesCount);
       user.markModified("score");
-      user.markModified("gameCount");
+      user.markModified("gamesCount");
       user.markModified("guessCount");
 
       user.markModified("modifydate");
-			user.save(function(error){
+			user.save(function(error,modifiedUser){
 				if(error){
 					console.log("FATAL " + error);
 					callback(error);
 				}else{
-					callback(null);
+					console.log("modified the  user");
+					console.log(modifiedUser);
+					callback(modifiedUser);
 				}
 			});
 		}

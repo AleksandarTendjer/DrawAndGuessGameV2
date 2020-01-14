@@ -22,10 +22,11 @@ const MongoClient = require('mongodb').MongoClient;
 const uri = process.env.MONGODB_URI || "mongodb://heroku_nft10gvf:822nen9r3b8inasjmj2bg8ks0h@ds049548.mlab.com:49548/heroku_nft10gvf";
 const client = new MongoClient(uri, { useNewUrlParser: true });
 let collection;
-
+//add collection  of words to the database
 client.connect(err => {
     if (err) return console.error(err);
     collection = client.db('heroku_nft10gvf').collection("words");
+
 //connecting to the database
 // connect to MongoDB
 mongoose.connect('mongodb://localhost:27017/DrawAndGuessGame')
@@ -235,6 +236,8 @@ io.on('connection', function(socket) {
             let j = currLobby.players.map(function(e) { return e.id; }).indexOf(currLobby.drawingPlayer);
             currLobby.players[j].score += 20;
             io.in(currLobby.lobbyId).emit('updateSB', currLobby.players, currLobby.drawingPlayer);
+            console.log("pushing the player which has guessed");
+            console.log(socket.id);
             currLobby.guessedPlayers.push(socket.id);
         } else if (currLobby && socket.id != currLobby.drawingPlayer && word != currLobby.word && !currLobby.guessedPlayers.includes(socket.id)) {
             io.to(socket.id).emit('guessRes', "TRY AGAIN!");
@@ -322,13 +325,25 @@ function next_turn(lobby) {
               //getting the players that guessed correctly(won a round)
               for (var k=0;k<lobby.guessedPlayers.length;k++)
               {
+                console.log(lobby.guessedPlayers);
+                console.log("guessed players");
+                console.log("guessed number");
+
+                console.log(k);
+                console.log("current guessed player");
+
+                console.log(lobby.guessedPlayers[k]);
                 //checking the socket.id-s
-                if(lobby.guessedPlayers.guessedPlayers[k]==lobby.players[j].id)
+                if(lobby.guessedPlayers[k]==lobby.players[j].id)
                   wonCount++;
 
               }
               console.log("***changing the players game status***");
-              dbo.saveScore(lobby.players[j].username,lobby.players[j].score,wonCount);
+              dbo.saveScore(lobby.players[j].username,lobby.players[j].score,wonCount,function(res){
+                console.log("returned :");
+                console.log(res);
+
+            });
             }
 
             //send to frontend that the game is finished(add styles and scoreboard)

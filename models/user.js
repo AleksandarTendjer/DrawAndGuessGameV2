@@ -23,6 +23,6 @@ var userSchema = new Schema({
     type: Number,
     default: 0
   },
-  gameCount: Number		//Reputation
+  gamesCount: Number		//Reputation
 }, {collection: 'user'});
 module.exports = mongoose.model('user', userSchema);

@@ -53,6 +53,10 @@
     hideClass(document.getElementsByClassName("type_right"));
     hideClass(document.getElementsByClassName('btn-start-Another'));
     hideClass(document.getElementsByClassName(' registration-login'));
+    //hideClass(document.getElementsByClassName("chat_input"));
+    //message_input
+    //hideClass(document.getElementsByClassName("chat_input"));
+
     //have to create the login logic here(when loggedIn)
     let usernameID = document.getElementById('usernameID');
     let startAnotherBtn=document.getElementById('start-game-btn');
@@ -382,6 +386,8 @@ document.getElementById("generalScore").innerHTML="General score: "+data.score;
     });
     socket.on('letsWatch', function(leaderSocket, dataURL) {
         if (socket.id != leaderSocket) {
+          //hideClass(document.getElementsByClassName("chat_input"));
+
             document.getElementById("canvasDraw").style.display = "none";
             document.getElementById("canvasView").style.display = "initial";
             hideClass(document.getElementsByClassName("utils"));
@@ -414,6 +420,7 @@ document.getElementById("generalScore").innerHTML="General score: "+data.score;
         document.getElementById("canvasView").style.display = "none";
         showClass(document.getElementsByClassName("utils"));
         hideClass(document.getElementsByClassName("msg"));
+        showClass(document.getElementsByClassName("chat_input"));
 
         let wordElem = document.getElementById('wordID');
         wordElem.textContent = "It's your turn to draw: " + word.toUpperCase();
