@@ -40,6 +40,7 @@
     //hiding elements on login
       document.getElementById("canvasDraw").style.display = "none";
     document.getElementById("canvasView").style.display = "none";
+    hideClass(document.getElementsByClassName("gif"));
     hideClass(document.getElementsByClassName("utils"));
     hideClass(document.getElementsByClassName("msg"));
     hideClass(document.getElementsByClassName("start-btn"));
@@ -316,20 +317,32 @@ document.getElementById("generalScore").innerHTML="General score: "+data.score;
         end.innerHTML = '<div>END OF ROUND!</div>';
         turns.appendChild(end);
     });
+    //fo the gif
+    function removeElement(target) {
+      target.animate({
+        opacity: "-=1"
+      }, 1000, function() {
+        target.remove();
+      });
+    }
 
     socket.on('guessRes', function(res) {
         let wordElem = document.getElementById('wordID');
         wordElem.textContent = res;
         if (res == "CORRECT!")
         {
+          debugger;
+          showClass(document.getElementsByClassName("gif"));
           //set timer to 10 secconds
             correct.play();
+            //removeElement($(".gif")[0]);
+            var fade=$(".gif")[0];//.hide(1000);
+            $(fade).fadeOut("slow");
+            //set the confetti animation
         }
     });
 
     socket.on('timer', function(timeleft) {
-      debugger;
-      console.log(timeleft);
         infoElem = document.getElementById('infoID');
         infoElem.setAttribute('style', 'white-space: pre;');
         infoElem.textContent = timeleft + "\r\nSECONDS\r\nREMAINING!";
